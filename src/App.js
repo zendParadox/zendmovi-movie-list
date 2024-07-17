@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getMovieList, searchMovie } from "./api";
 import Header from "./component/Header";
 import Card from "./component/Card";
+import NotFound from "./component/NotFound";
 
 const App = () => {
   const [popularMovies, setPopularMovies] = useState([]);
@@ -33,11 +34,15 @@ const App = () => {
         <div className="mt-5 w-full">
           <Header onSearch={search} />
           <div className="mt-12 flex justify-center">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
-              {moviesToDisplay.map((movie, i) => (
-                <Card key={i} movie={movie} />
-              ))}
-            </div>
+            {moviesToDisplay.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
+                {moviesToDisplay.map((movie, i) => (
+                  <Card key={i} movie={movie} />
+                ))}
+              </div>
+            ) : (
+              <NotFound query={query} />
+            )}
           </div>
         </div>
       </div>
