@@ -4,6 +4,8 @@ import { getMovieList, searchMovie } from "./api";
 
 const App = () => {
   const [popularMovies, setPopularMovies] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     getMovieList().then((result) => {
@@ -12,36 +14,42 @@ const App = () => {
   }, []);
 
   const PopularMovieList = () => {
-    return popularMovies.map((movie, i) => {
-      return (
-        <div
-          className="w-80 h-auto flex-wrap p-3 rounded-xl border shadow-xl text-center md:w-80 "
-          key={i}>
-          <img
-            src={`${process.env.REACT_APP_BASEIMGURL}/${movie.poster_path}`}
-            alt=""
-            srcset=""
-            className="w-full h-[26rem] rounded-xl object-cover "
-          />
-          <div className="">
-            <div className="h-20 flex items-center justify-center">
-              <div className="movie-title text-2xl font-semibold">
-                {movie.title}
-              </div>
-            </div>
-            <div className="movie-date ">{movie.release_date}</div>
-            <div className="movie-rate text-red-400 underline">
-              {movie.vote_average}
+    const moviesToDisplay = query ? searchResults : popularMovies;
+
+    return moviesToDisplay.map((movie, i) => (
+      <div
+        className="w-80 h-auto flex-wrap p-3 rounded-xl border shadow-xl text-center md:w-80"
+        key={i}>
+        <img
+          src={`${process.env.REACT_APP_BASEIMGURL}/${movie.poster_path}`}
+          alt={movie.title}
+          className="w-full h-[26rem] rounded-xl object-cover"
+        />
+        <div className="">
+          <div className="h-20 flex items-center justify-center">
+            <div className="movie-title text-2xl font-semibold">
+              {movie.title}
             </div>
           </div>
+          <div className="movie-date">{movie.release_date}</div>
+          <div className="movie-rate text-red-400 underline">
+            {movie.vote_average}
+          </div>
         </div>
-      );
-    });
+      </div>
+    ));
   };
 
-  const search = (q) => {
-    fetch(`https://api.github.com/search/users?q=${q}`);
+  const search = async (q) => {
+    setQuery(q);
+    if (q) {
+      const results = await searchMovie(q);
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
   };
+
   return (
     <section>
       <div className="container flex justify-center mx-auto">
@@ -60,7 +68,7 @@ const App = () => {
             />
           </div>
           <div className="mt-12 flex justify-center">
-            <div className="grid grid-cols-1  md:grid-cols-2 xl:grid-cols-4 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
               <PopularMovieList />
             </div>
           </div>
