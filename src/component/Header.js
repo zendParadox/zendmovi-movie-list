@@ -8,7 +8,7 @@ const Header = ({ onSearch }) => {
           zend<span className="text-red-400 font-bold">movi</span>
         </h1>
       </div>
-      <div className="search mt-5 w-full flex justify-center xl:mt-10">
+      <div className="search mt-5 w-80 mx-auto flex justify-center md:w-full xl:mt-10">
         <input
           type="text"
           placeholder="Masukkan Judul..."

@@ -9,6 +9,7 @@ const App = () => {
   const [popularMovies, setPopularMovies] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     getMovieList().then((result) => {
@@ -18,6 +19,7 @@ const App = () => {
 
   const search = async (q) => {
     setQuery(q);
+    setPage(1);
     if (q) {
       const results = await searchMovie(q);
       setSearchResults(results);
@@ -26,7 +28,12 @@ const App = () => {
     }
   };
 
+  const loadMore = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
   const moviesToDisplay = query ? searchResults : popularMovies;
+  const displayedMovies = moviesToDisplay.slice(0, page * 10);
 
   return (
     <section>
@@ -34,11 +41,22 @@ const App = () => {
         <div className="mt-5 w-full">
           <Header onSearch={search} />
           <div className="mt-12 flex justify-center">
-            {moviesToDisplay.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
-                {moviesToDisplay.map((movie, i) => (
-                  <Card key={i} movie={movie} />
-                ))}
+            {displayedMovies.length > 0 ? (
+              <div>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
+                  {displayedMovies.map((movie, i) => (
+                    <Card key={i} movie={movie} />
+                  ))}
+                </div>
+                {displayedMovies.length < moviesToDisplay.length && (
+                  <div className="flex justify-center mt-10">
+                    <button
+                      className="px-4 py-2 bg-blue-500 text-white rounded"
+                      onClick={loadMore}>
+                      Selanjutnya
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <NotFound query={query} />
