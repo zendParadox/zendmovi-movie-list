@@ -1,4 +1,5 @@
 import React from "react";
+import StarIcon from "../assets/icon/icon-stars.svg";
 
 const Card = ({ movie }) => {
   return (
@@ -15,8 +16,9 @@ const Card = ({ movie }) => {
           </div>
         </div>
         <div className="movie-date">{movie.release_date}</div>
-        <div className="movie-rate text-red-400 underline">
-          {movie.vote_average}
+        <div className="movie-rate text-red-400 underline flex justify-center items-center">
+          <img src={StarIcon} alt="stars" className="w-5 h-5 mx-1" />
+          {movie.vote_average}{" "}
         </div>
       </div>
     </div>
